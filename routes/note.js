@@ -16,14 +16,7 @@ const noteSchema = new Schema(
 
 const Note = model("note", noteSchema); //create Model
 
-router.get("/", (req, res) => {
-  res.status(200).json({
-    resultCode: 20000,
-    resultData: "this is note note note",
-  });
-});
-
-router.get("/findall", async (req, res) => {
+router.get("/", async (req, res) => {
   //response(200) finish before findall use async await to fix
 
   const findall = await Note.find({});
@@ -62,15 +55,28 @@ router.post("/save", async (req, res) => {
   });
 });
 
-router.get('/findone/:id',async (req,res)=>{
-    const {id} = req.params;
+router.get('/:id',async (req,res)=>{
+    try {
+        const {id} = req.params;
     const result = await Note.findById(id);
+    if(!result){ //
+        return res.status(404).json({
+            resultCode: 40400,
+            resultDescription: "Not found",
+        })
+    }
     res.status(200).json({
         resultCode: 20000,
         resultDescription: "Success",
         resultData: result
     })
-    console.log(result)
+    } catch (error) {
+        res.status(500).json({
+            resultCode: 50000,
+            resultDescription: "Error",
+            resultData: error
+        })
+    }
 })
 
 router.put('/update/:id',async (req,res)=>{
