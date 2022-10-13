@@ -4,7 +4,9 @@ const morgan = require("morgan"); //log
 const mongoose = require("mongoose"); //connect to MongoDB
 const port = 3000;
 const note = require("./routes/note");
+const helmet = require("helmet");
 
+app.use(helmet());
 app.use(express.json());
 app.use(morgan("tiny"));
 
