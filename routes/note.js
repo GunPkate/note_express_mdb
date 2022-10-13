@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
   const { title, text } = req.body; //destructuring
   console.log(title, text);
   const result = await Note.create({
@@ -47,7 +47,7 @@ router.post("/save", async (req, res) => {
   const note = new Note();
   note.title = title;
   note.text = text;
-  note.save();
+  await note.save();
   res.status(201).json({
     resultCode: 20100,
     resultDescription: "create success",
@@ -79,7 +79,7 @@ router.get('/:id',async (req,res)=>{
     }
 })
 
-router.put('/update/:id',async (req,res)=>{
+router.put('/:id',async (req,res)=>{
     const {id} = req.params;
     const {title,text} = req.body
     
@@ -94,10 +94,16 @@ router.put('/update/:id',async (req,res)=>{
     })
 })
 
-router.delete('/delete/:id',async(req,res)=>{
+router.delete('/:id',async(req,res)=>{
     const {id} = req.params;
 
     const find_id = await Note.findByIdAndDelete(id)
+    if(!find_id){
+        return res.status(404).json({
+            resultCode: 40400,
+            resultDescription: "Not found",
+        })
+    }
     res.status(200).json({
         resultCode: 20000,
         resultDescription: "deleted",
