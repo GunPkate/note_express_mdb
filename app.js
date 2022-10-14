@@ -4,6 +4,7 @@ const morgan = require("morgan"); //log
 const mongoose = require("mongoose"); //connect to MongoDB
 const port = 3000;
 const note = require("./routes/note");
+const user = require("./routes/user");
 const helmet = require("helmet");
 
 app.use(helmet());
@@ -17,6 +18,7 @@ mongoose
 
 // app.use("/home", note);
 app.use("/api/notes", note);
+app.use("/api/users", user);
 
 app.get("/", (req, res) => {
   res.status(200).json({
